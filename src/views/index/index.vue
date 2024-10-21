@@ -25,7 +25,7 @@ import RightBottom from "./right-bottom.vue";
       </ItemWrap>
       <ItemWrap
         class="contetn_left-bottom contetn_lr-item"
-        title="设备提醒"
+        title="散点分布"
         style="padding: 0 10px 16px 10px"
       >
         <LeftBottom />
@@ -38,17 +38,17 @@ import RightBottom from "./right-bottom.vue";
       </ItemWrap>
     </div>
     <div class="contetn_right">
-      <ItemWrap class="contetn_left-bottom contetn_lr-item" title="报警次数">
+      <ItemWrap class="contetn_left-bottom contetn_lr-item" title="折线图">
         <RightTop />
       </ItemWrap>
       <ItemWrap
         class="contetn_left-bottom contetn_lr-item"
-        title="报警排名(TOP8)"
+        title="排名(TOP8)"
         style="padding: 0 10px 16px 10px"
       >
         <RightCenter />
       </ItemWrap>
-      <ItemWrap class="contetn_left-bottom contetn_lr-item" title="数据统计图 ">
+      <ItemWrap class="contetn_left-bottom contetn_lr-item" title="旭日图实例 ">
         <RightBottom />
       </ItemWrap>
     </div>
