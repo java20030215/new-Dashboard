@@ -1,110 +1,80 @@
 <script setup lang="ts">
-import { leftBottom } from "@/api";
-import SeamlessScroll from "@/components/seamless-scroll";
-import { computed, onMounted, reactive } from "vue";
-import { useSettingStore } from "@/stores";
-import { storeToRefs } from "pinia";
-import EmptyCom from "@/components/empty-com";
-import { ElMessage } from "element-plus";
 
-const settingStore = useSettingStore();
-const { defaultOption, indexConfig } = storeToRefs(settingStore);
-const state = reactive<any>({
-  list: [],
-  defaultOption: {
-    ...defaultOption.value,
-    singleHeight: 256,
-    limitScrollNum: 4,
+
+// prettier-ignore
+const hours = [
+    '12a', '1a', '2a', '3a', '4a', '5a', '6a',
+    '7a', '8a', '9a', '10a', '11a',
+    '12p', '1p', '2p', '3p', '4p', '5p',
+    '6p', '7p', '8p', '9p', '10p', '11p'
+];
+// prettier-ignore
+const days = [
+    'Saturday', 'Friday', 'Thursday',
+    'Wednesday', 'Tuesday', 'Monday', 'Sunday'
+];
+// prettier-ignore
+const data = [[0, 0, 5], [0, 1, 1], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0], [0, 6, 0], [0, 7, 0], [0, 8, 0], [0, 9, 0], [0, 10, 0], [0, 11, 2], [0, 12, 4], [0, 13, 1], [0, 14, 1], [0, 15, 3], [0, 16, 4], [0, 17, 6], [0, 18, 4], [0, 19, 4], [0, 20, 3], [0, 21, 3], [0, 22, 2], [0, 23, 5], [1, 0, 7], [1, 1, 0], [1, 2, 0], [1, 3, 0], [1, 4, 0], [1, 5, 0], [1, 6, 0], [1, 7, 0], [1, 8, 0], [1, 9, 0], [1, 10, 5], [1, 11, 2], [1, 12, 2], [1, 13, 6], [1, 14, 9], [1, 15, 11], [1, 16, 6], [1, 17, 7], [1, 18, 8], [1, 19, 12], [1, 20, 5], [1, 21, 5], [1, 22, 7], [1, 23, 2], [2, 0, 1], [2, 1, 1], [2, 2, 0], [2, 3, 0], [2, 4, 0], [2, 5, 0], [2, 6, 0], [2, 7, 0], [2, 8, 0], [2, 9, 0], [2, 10, 3], [2, 11, 2], [2, 12, 1], [2, 13, 9], [2, 14, 8], [2, 15, 10], [2, 16, 6], [2, 17, 5], [2, 18, 5], [2, 19, 5], [2, 20, 7], [2, 21, 4], [2, 22, 2], [2, 23, 4], [3, 0, 7], [3, 1, 3], [3, 2, 0], [3, 3, 0], [3, 4, 0], [3, 5, 0], [3, 6, 0], [3, 7, 0], [3, 8, 1], [3, 9, 0], [3, 10, 5], [3, 11, 4], [3, 12, 7], [3, 13, 14], [3, 14, 13], [3, 15, 12], [3, 16, 9], [3, 17, 5], [3, 18, 5], [3, 19, 10], [3, 20, 6], [3, 21, 4], [3, 22, 4], [3, 23, 1], [4, 0, 1], [4, 1, 3], [4, 2, 0], [4, 3, 0], [4, 4, 0], [4, 5, 1], [4, 6, 0], [4, 7, 0], [4, 8, 0], [4, 9, 2], [4, 10, 4], [4, 11, 4], [4, 12, 2], [4, 13, 4], [4, 14, 4], [4, 15, 14], [4, 16, 12], [4, 17, 1], [4, 18, 8], [4, 19, 5], [4, 20, 3], [4, 21, 7], [4, 22, 3], [4, 23, 0], [5, 0, 2], [5, 1, 1], [5, 2, 0], [5, 3, 3], [5, 4, 0], [5, 5, 0], [5, 6, 0], [5, 7, 0], [5, 8, 2], [5, 9, 0], [5, 10, 4], [5, 11, 1], [5, 12, 5], [5, 13, 10], [5, 14, 5], [5, 15, 7], [5, 16, 11], [5, 17, 6], [5, 18, 0], [5, 19, 5], [5, 20, 3], [5, 21, 4], [5, 22, 2], [5, 23, 0], [6, 0, 1], [6, 1, 0], [6, 2, 0], [6, 3, 0], [6, 4, 0], [6, 5, 0], [6, 6, 0], [6, 7, 0], [6, 8, 0], [6, 9, 0], [6, 10, 1], [6, 11, 0], [6, 12, 2], [6, 13, 1], [6, 14, 3], [6, 15, 4], [6, 16, 0], [6, 17, 0], [6, 18, 0], [6, 19, 0], [6, 20, 1], [6, 21, 2], [6, 22, 2], [6, 23, 6]];
+const option = {
+  title: {
+    text: 'Punch Card of Github'
   },
-  scroll: true,
-});
-
-const getData = () => {
-  leftBottom( { limitNum: 20 })
-    .then((res) => {
-      console.log("左下--设备提醒", res);
-      if (res.success) {
-        state.list = res.data.list;
-      } else {
-        ElMessage({
-          message: res.msg,
-          type: "warning",
-        });
-      }
-    })
-    .catch((err) => {
-      ElMessage.error(err);
-    });
-};
-const addressHandle = (item: any) => {
-  let name = item.provinceName;
-  if (item.cityName) {
-    name += "/" + item.cityName;
-    if (item.countyName) {
-      name += "/" + item.countyName;
+  legend: {
+    data: ['Punch Card'],
+    left: 'right'
+  },
+  polar: {},
+  tooltip: {
+    formatter: function (params) {
+      return (
+        params.value[2] +
+        ' commits in ' +
+        hours[params.value[1]] +
+        ' of ' +
+        days[params.value[0]]
+      );
     }
-  }
-  return name;
+  },
+  angleAxis: {
+    type: 'category',
+    data: hours,
+    boundaryGap: false,
+    splitLine: {
+      show: true
+    },
+    axisLine: {
+      show: false
+    }
+  },
+  radiusAxis: {
+    type: 'category',
+    data: days,
+    axisLine: {
+      show: false
+    },
+    axisLabel: {
+      rotate: 45
+    }
+  },
+  series: [
+    {
+      name: 'Punch Card',
+      type: 'scatter',
+      coordinateSystem: 'polar',
+      symbolSize: function (val) {
+        return val[2] * 2;
+      },
+      data: data,
+      animationDelay: function (idx) {
+        return idx * 5;
+      }
+    }
+  ]
 };
-const comName = computed(() => {
-  if (indexConfig.value.leftBottomSwiper) {
-    return SeamlessScroll;
-  } else {
-    return EmptyCom;
-  }
-});
-onMounted(() => {
-  getData();
-});
 </script>
 
 <template>
-  <div class="left_boottom_wrap beautify-scroll-def" :class="{ 'overflow-y-auto': !indexConfig.leftBottomSwiper }">
-    <component
-      :is="comName"
-      :list="state.list"
-      v-model="state.scroll"
-      :singleHeight="state.defaultOption.singleHeight"
-      :step="state.defaultOption.step"
-      :limitScrollNum="state.defaultOption.limitScrollNum"
-      :hover="state.defaultOption.hover"
-      :singleWaitTime="state.defaultOption.singleWaitTime"
-      :wheel="state.defaultOption.wheel"
-    >
-      <ul class="left_boottom">
-        <li class="left_boottom_item" v-for="(item, i) in state.list" :key="i">
-          <span class="orderNum doudong">{{ i + 1 }}</span>
-          <div class="inner_right">
-            <div class="dibu"></div>
-            <div class="flex">
-              <div class="info">
-                <span class="labels">设备ID：</span>
-                <span class="text-content zhuyao doudong wangguan"> {{ item.gatewayno }}</span>
-              </div>
-              <div class="info">
-                <span class="labels">时间：</span>
-                <span class="text-content" style="font-size: 12px"> {{ item.createTime }}</span>
-              </div>
-            </div>
-
-            <span
-              class="types doudong"
-              :class="{
-                typeRed: item.onlineState == 0,
-                typeGreen: item.onlineState == 1,
-              }"
-              >{{ item.onlineState == 1 ? "上线" : "下线" }}</span
-            >
-
-            <div class="info addresswrap">
-              <span class="labels">地址：</span>
-              <span class="text-content ciyao" style="font-size: 12px"> {{ addressHandle(item) }}</span>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </component>
-  </div>
+ <v-chart class="chart" :option="option"  />
 </template>
 
 <style scoped lang="scss">
@@ -112,117 +82,5 @@ onMounted(() => {
   overflow: hidden;
   width: 100%;
   height: 100%;
-}
-
-.doudong {
-  overflow: hidden;
-  backface-visibility: hidden;
-}
-
-.overflow-y-auto {
-  overflow-y: auto;
-}
-
-.left_boottom {
-  width: 100%;
-  height: 100%;
-
-  .left_boottom_item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    font-size: 14px;
-    margin: 10px 0;
-    .orderNum {
-      margin: 0 16px 0 -20px;
-    }
-
-    .info {
-      margin-right: 10px;
-      display: flex;
-      align-items: center;
-      color: #fff;
-
-      .labels {
-        flex-shrink: 0;
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.6);
-      }
-
-      .zhuyao {
-        color: $primary-color;
-        font-size: 15px;
-      }
-
-      .ciyao {
-        color: rgba(255, 255, 255, 0.8);
-      }
-
-      .warning {
-        color: #e6a23c;
-        font-size: 15px;
-      }
-    }
-
-    .inner_right {
-      position: relative;
-      height: 100%;
-      width: 380px;
-      flex-shrink: 0;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      .dibu {
-        position: absolute;
-        height: 2px;
-        width: 104%;
-        background-image: url("@/assets/img/zuo_xuxian.png");
-        bottom: -10px;
-        left: -2%;
-        background-size: cover;
-      }
-      .addresswrap {
-        width: 100%;
-        display: flex;
-        margin-top: 8px;
-      }
-    }
-
-    .wangguan {
-      color: #1890ff;
-      font-weight: 900;
-      font-size: 15px;
-      width: 80px;
-      flex-shrink: 0;
-    }
-
-    .time {
-      font-size: 12px;
-      // color: rgba(211, 210, 210,.8);
-      color: #fff;
-    }
-
-    .address {
-      font-size: 12px;
-      cursor: pointer;
-      // @include text-overflow(1);
-    }
-
-    .types {
-      width: 30px;
-      flex-shrink: 0;
-    }
-
-    .typeRed {
-      color: #fc1a1a;
-    }
-
-    .typeGreen {
-      color: #29fc29;
-    }
-  }
 }
 </style>

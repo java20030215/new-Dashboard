@@ -1,13 +1,22 @@
-// vue-echarts
-import ECharts from 'vue-echarts'
-import { use } from "echarts/core"
+import ECharts from 'vue-echarts';
+import { use } from 'echarts/core';
+
+// 导入需要的渲染器
+import { CanvasRenderer } from 'echarts/renderers'; // 确保导入渲染器
+
+// 导入图表类型
 import {
-    CanvasRenderer
-  } from 'echarts/renderers'
-  import {
-    BarChart,PieChart,MapChart,EffectScatterChart,LineChart 
-  } from 'echarts/charts'
-  import {
+    BarChart,
+    PieChart,
+    LineChart,
+    ScatterChart,
+    EffectScatterChart,
+    MapChart,
+    SunburstChart // 添加 SunburstChart
+} from 'echarts/charts';
+
+// 导入组件
+import {
     GridComponent,
     TitleComponent,
     TooltipComponent,
@@ -15,22 +24,33 @@ import {
     DatasetComponent,
     VisualMapComponent,
     GeoComponent,
-    MarkPointComponent
-  } from 'echarts/components'
+    ToolboxComponent,
+    BrushComponent,
+    PolarComponent
+} from 'echarts/components';
 
-  use([
-    CanvasRenderer,
-    BarChart,PieChart,MapChart,EffectScatterChart,LineChart,
+// 注册所有使用的组件和渲染器
+use([
+    CanvasRenderer, // 添加 CanvasRenderer
+    BarChart,
+    PieChart,
+    LineChart,
+    ScatterChart,
+    EffectScatterChart,
+    MapChart,
+    SunburstChart, // 注册 SunburstChart
     GridComponent,
-    LegendComponent,
-    TooltipComponent,
     TitleComponent,
+    TooltipComponent,
+    LegendComponent,
     DatasetComponent,
     VisualMapComponent,
     GeoComponent,
-    MarkPointComponent
-  ])
+    ToolboxComponent,
+    BrushComponent,
+    PolarComponent
+]);
 
-  export const registerEcharts= (app:any)=>{
-    app.component('v-chart', ECharts)
-  }
+export const registerEcharts = (app: any) => {
+    app.component('v-chart', ECharts); // 注册 ECharts 组件
+};
